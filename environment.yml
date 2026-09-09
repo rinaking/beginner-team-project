@@ -1,0 +1,19 @@
+# 팀 공용 conda 환경. 이 파일이 의존성의 단일 소스입니다.
+#   생성   conda env create -f environment.yml
+#   갱신   conda env update -f environment.yml --prune
+#   활성화 conda activate beginner-team-project
+name: beginner-team-project
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.13
+  - numpy>=2.2
+  - pandas>=2.2.3
+  - pytest>=8.3
+  - ruff>=0.15
+  - ipykernel>=6.29
+  - pip>=24
+  - pip:
+      - --editable .

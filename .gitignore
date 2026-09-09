@@ -1,0 +1,44 @@
+# 빌드 결과물
+/build
+/dist
+*.egg-info/
+
+# 로그 · 임시 파일
+*.log
+*.tmp
+
+# 환경 변수 (비밀값)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+
+# conda / 가상환경
+/env/
+/.conda/
+environment.lock.yml
+
+# 도구 캐시
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 데이터 · 모델 (대용량 — 커밋하지 않음)
+/data/
+/models/
+*.ckpt
+*.pth
+*.pt
+
+# 주피터
+.ipynb_checkpoints/
+
+# OS · 에디터
+.DS_Store
+Thumbs.db
+*.swp
