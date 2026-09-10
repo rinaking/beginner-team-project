@@ -1,8 +1,0 @@
-* text=auto eol=lf
-*.py   text eol=lf
-*.md   text eol=lf
-*.sh   text eol=lf
-*.png  binary
-*.jpg  binary
-*.gz   binary
-environment.yml text eol=lf
