@@ -1,177 +1,122 @@
-<div align="center">
+# 초급 팀 프로젝트 — MNIST 이미지 분류
 
-# 초급 팀 프로젝트
-
-**Git · GitHub 협업을 처음 하는 팀이 함께 쓰는 기준 저장소**
-
-![python](https://img.shields.io/badge/python-3.13-3776AB?logo=python&logoColor=white)
-![env](https://img.shields.io/badge/env-conda-44A833?logo=anaconda&logoColor=white)
-![workflow](https://img.shields.io/badge/workflow-GitHub%20Flow-181717?logo=github&logoColor=white)
-![license](https://img.shields.io/badge/license-MIT-green)
-
-</div>
+Git · GitHub 협업을 처음 하는 팀이 **같은 저장소 · 같은 규칙**으로
+하나의 딥러닝 프로젝트를 완성하는 실습 저장소입니다.
+기준 예제: [Sprint-Seokmin/sprint-ai-ex](https://github.com/Sprint-Seokmin/sprint-ai-ex)
 
 ---
 
-## 📋 목차
-
-- [프로젝트 개요](#-프로젝트-개요)
-- [빠른 시작](#-빠른-시작)
-- [프로젝트 구조](#-프로젝트-구조)
-- [협업 방법](#-협업-방법)
-- [브랜치 · 커밋 규칙](#-브랜치--커밋-규칙)
-- [Pull Request 규칙](#-pull-request-규칙)
-- [문서](#-문서)
-- [팀](#-팀)
-- [라이선스](#-라이선스)
-
----
-
-## 🎯 프로젝트 개요
+## 프로젝트 개요
 
 | 항목 | 내용 |
 | --- | --- |
-| **목적** | Git·GitHub 을 처음 쓰는 팀원들이 **같은 환경, 같은 규칙**으로 하나의 프로젝트를 완성한다 |
-| **대상** | Git·GitHub 경험이 거의 없는 팀원 |
-| **얻는 것** | 브랜치 기반 협업 · Pull Request 리뷰 · 충돌 해결 · 재현 가능한 개발 환경 |
-| **진행 방식** | `main` 보호 + `feature/*` 브랜치 + PR 리뷰 1인 승인 + Squash 병합 |
-
-> 프로젝트의 구체적 주제·기능은 팀에서 정합니다. 이 저장소는 **협업의 뼈대**를 제공합니다.
+| 목적 | 각 팀원이 `feature/*` 브랜치에서 전처리 · 증강 · 모델링을 나눠 맡고, PR 리뷰를 거쳐 `main` 에 병합한다 |
+| 데이터셋 | MNIST (손글씨 숫자 0–9, 1×28×28) — 실행 시 `data/` 에 자동 다운로드 |
+| 주요 기능 | 모델 선택 학습/평가(`main.py`), 전처리 파이프라인, 데이터 증강, 3종 모델(From Scratch · VGGNet · ResNet) |
+| 협업 방식 | GitHub Flow — `main` 보호 + `feature/*` 브랜치 + Pull Request + Squash 병합 |
 
 ---
 
-## 🚀 빠른 시작
+## 폴더 구조
 
-### 1. 사전 준비 (한 번만)
-
-| 프로그램 | 받는 곳 |
-| --- | --- |
-| Git | Windows [git-scm.com/download/win](https://git-scm.com/download/win) · macOS 터미널에서 `git --version` |
-| Miniforge (conda) | [github.com/conda-forge/miniforge](https://github.com/conda-forge/miniforge) |
-| VS Code | [code.visualstudio.com](https://code.visualstudio.com) |
-
-```bash
-git config --global user.name  "본인 이름"
-git config --global user.email "GitHub 이메일"
-git config --global core.autocrlf input   # Windows 는 true
+```
+beginner-team-project/
+├── main.py                  학습·평가 진입점 (--model 로 모델 선택)
+├── requirements.txt         torch, torchvision
+├── data/                    MNIST 저장 위치 (git 제외)
+├── models/
+│   ├── mlp.py               기준 베이스라인 (바로 학습됨)
+│   ├── from_scratch.py      팀원 C — feature/model-fromscratch
+│   ├── vggnet.py            팀원 D — feature/model-vggnet
+│   └── resnet.py            팀원 E — feature/model-resnet
+└── utils/
+    ├── data_loader.py       MNIST DataLoader
+    ├── preprocessing.py     팀원 A — feature/preprocessing
+    └── augmentation.py      팀원 B — feature/augmentation
 ```
 
-### 2. 저장소 받기 + 환경 구성
+---
+
+## 실행 방법
 
 ```bash
+# 1. 저장소 복제
 git clone https://github.com/rinaking/beginner-team-project.git
 cd beginner-team-project
-conda env create -f environment.yml
-conda activate beginner-team-project
+
+# 2. 패키지 설치 (가상환경 권장)
+pip install -r requirements.txt
+
+# 3. 학습 + 평가
+python main.py                      # 베이스라인(MLP), 5 epochs
+python main.py --model mlp --epochs 3
+python main.py --model resnet --augment
 ```
 
-### 3. 정상 동작 확인
+> `models/mlp.py` 만 바로 학습됩니다. `from_scratch` · `vggnet` · `resnet` 은
+> 담당 팀원이 구현을 채우기 전까지 `NotImplementedError` 를 냅니다.
+
+---
+
+## 모델 설명 및 결과
+
+| 모델 | 담당 | 구현 내용 | Test Accuracy |
+| --- | --- | --- | --- |
+| SimpleMLP (베이스라인) | — | FC(784→128) → ReLU → FC(128→10) | _채우기_ |
+| From Scratch CNN | 팀원 C | _Conv/Pool/FC 직접 구성_ | _채우기_ |
+| VGGNet | 팀원 D | _3×3 Conv 반복 + MaxPool_ | _채우기_ |
+| ResNet | 팀원 E | _잔차 블록 스택_ | _채우기_ |
+
+---
+
+## 협업 내용
+
+### 역할 · 브랜치
+
+| 팀원 | 역할 | 브랜치 |
+| --- | --- | --- |
+| _이름_ | 데이터 전처리 파이프라인 개선 | `feature/preprocessing` |
+| _이름_ | 데이터 증강 기능 추가 | `feature/augmentation` |
+| _이름_ | 모델링 – From Scratch | `feature/model-fromscratch` |
+| _이름_ | 모델링 – VGGNet | `feature/model-vggnet` |
+| _이름_ | 모델링 – ResNet | `feature/model-resnet` |
+
+> 팀원 수가 5명보다 적으면 한 사람이 여러 역할을 맡습니다.
+
+### 작업 흐름
 
 ```bash
-python -m src        # "초급 팀 프로젝트 준비 완료" 출력
-pytest -q            # 테스트 통과
+# 1. main 최신화 후 feature 브랜치 생성
+git switch main && git pull
+git switch -c feature/preprocessing
+
+# 2. 작업 → 커밋 → 푸시
+git add .
+git commit -m "Implement 전처리 feature"
+git push -u origin feature/preprocessing
+
+# 3. GitHub 에서 PR 생성 → 리뷰 → Approve → Squash 병합
+# 4. 병합된 브랜치 정리
+git switch main && git pull
+git branch -d feature/preprocessing
 ```
 
-> ✅ 위 두 명령이 오류 없이 끝나면 준비 완료입니다.
+### PR 작성 규칙
+
+PR 제목·본문에 아래 세 가지를 적습니다.
+
+- **작업 내용** — 무엇을 바꿨는지
+- **구현한 기능** — 새로 추가/개선된 기능
+- **테스트 결과** — 실행 명령과 정확도 등 간단한 결과
+
+### 규칙
+
+- `main` 직접 push 금지 — 반드시 PR 로 병합
+- 병합 방식은 **Squash and merge**
+- 충돌이 나면 브랜치에서 `git pull origin main` 후 해결하고 다시 push
 
 ---
 
-## 📁 프로젝트 구조
+## 라이선스
 
-```text
-beginner-team-project/
-├── README.md                     이 문서
-├── LICENSE                       MIT
-├── CONTRIBUTING.md               기여 방법 (요약)
-├── CHANGELOG.md                  변경 이력
-├── environment.yml               conda 환경 정의 (의존성 단일 소스)
-├── .env.example                  환경 변수 키 목록 (값은 .env 에, 커밋 금지)
-├── .gitignore / .gitattributes / .editorconfig
-├── .github/
-│   ├── PULL_REQUEST_TEMPLATE.md  PR 본문 서식
-│   ├── CODEOWNERS                기본 리뷰어
-│   └── ISSUE_TEMPLATE/           버그 · 기능 요청 양식
-├── docs/
-│   ├── README.md                 문서 색인
-│   ├── 협업-가이드.md            팀원용 — 개념부터 실전까지
-│   └── 팀장-가이드.md            팀장용 — 저장소 구축 + 운영
-├── src/                          소스 코드
-└── tests/                        테스트
-```
-
----
-
-## 🤝 협업 방법
-
-**브랜치 전략: GitHub Flow** — `main` 은 항상 정상 동작, 모든 작업은 `feature/*` 브랜치 → PR.
-
-```text
-main 최신화 → feature 브랜치 생성 → 작업 · 커밋 → push → PR 생성
-→ 리뷰 1인 승인 → Squash 병합 → 브랜치 삭제 → 다시 처음
-```
-
-각 단계의 명령·화면은 **[docs/협업-가이드.md](docs/협업-가이드.md)** 4장에 있습니다. Git 이 처음이면 1장부터 읽으세요.
-
----
-
-## 🌿 브랜치 · 커밋 규칙
-
-**브랜치명** — `<타입>/<요약>` (소문자·하이픈)
-
-| 타입 | 용도 | 예 |
-| --- | --- | --- |
-| `feat` | 기능 추가 | `feat/data-loader` |
-| `fix` | 버그 수정 | `fix/login-error` |
-| `docs` | 문서 | `docs/readme-badge` |
-| `refactor` `test` `chore` | 정리 · 테스트 · 잡일 | |
-
-**커밋 메시지** — [Conventional Commits](https://www.conventionalcommits.org/ko/)
-
-```text
-<타입>: <무엇을 왜 바꿨는지 — 명령형, 72자 이내>
-```
-
-예: `feat: CSV 로더에 결측치 보간 옵션 추가`
-
-- 커밋은 **의미 단위로 자주**. 하루치를 한 커밋에 몰지 않습니다.
-- `main` 직접 push 금지 · `git push --force` 금지.
-
----
-
-## ✅ Pull Request 규칙
-
-1. PR 본문에 **작업 내용 · 구현한 기능 · 테스트 결과** (템플릿이 자동으로 뜹니다)
-2. 리뷰어 **1명 이상** 지정 — 리뷰 요청은 24시간 내 응답
-3. **승인 1개 + 검사 통과 + 대화 해결** → **Squash and merge** → **Delete branch**
-4. 본인 PR은 본인이 승인할 수 없습니다
-5. 병합 후 로컬 정리: `git switch main && git pull && git branch -d <브랜치>`
-
----
-
-## 📚 문서
-
-| 문서 | 대상 | 내용 |
-| --- | --- | --- |
-| [docs/협업-가이드.md](docs/협업-가이드.md) | 팀원 전원 | 개념 → 준비 → 첫걸음 → 작업 사이클 → 충돌 → 규칙 → GitHub 기능 → 부록(명령어·오류·용어·Fork) |
-| [docs/팀장-가이드.md](docs/팀장-가이드.md) | 팀장 | 저장소 구축(Rulesets·Collaborators·PR 템플릿) · 스프린트 운영 · 코드 리뷰 · 함정 |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | 기여자 | 작업 흐름 요약 |
-
----
-
-## 👥 팀
-
-| 이름 | GitHub | 역할 | 담당 |
-| --- | --- | --- | --- |
-| **김혜린** (팀장) | [@rinaking](https://github.com/rinaking) | 저장소·일정·병합 관리 | 전체 조율 |
-| | | | |
-| | | | |
-| | | | |
-| | | | |
-
-> 담당 파일·폴더가 서로 겹치지 않도록 나눕니다 (겹치면 충돌).
-
----
-
-## 📄 라이선스
-
-[MIT](LICENSE) © 2026
+[MIT](LICENSE)
