@@ -117,6 +117,12 @@ PR 제목·본문에 아래 세 가지를 적습니다.
 
 ---
 
+## 협업일지
+
+팀 협업일지(Daily Log): [Notion 링크](https://app.notion.com/p/73e3cd573ab04a9ca92d7ee967791205)
+
+---
+
 ## 라이선스
 
 [MIT](LICENSE)
