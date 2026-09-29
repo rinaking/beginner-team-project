@@ -1,0 +1,7 @@
+팀원이 이 폴더를 받은 뒤 실행하는 방법입니다.
+
+1. Python 3.12로 backend 안에 가상환경을 만들고 pip install -r requirements.txt를 실행합니다.
+2. backend에서 서버를 켭니다. uvicorn main:app --host 127.0.0.1 --port 8000
+3. Flutter가 설치된 상태에서 mobile로 이동해 flutter pub get을 한 뒤 앱을 실행합니다.
+
+약 사진 인식과 복용 기록은 이 상태로 동작합니다. 식약처에서 가져오는 상세 문구를 보려면 backend/.env.example을 backend/.env로 복사하고, 본인 API 키를 넣어야 합니다. 그 키는 이 폴더에 포함되어 있지 않습니다.
