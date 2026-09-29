@@ -105,7 +105,11 @@ PR 제목·본문에 아래 세 가지를 적습니다.
 ## 제출물
 
 - 분석 보고서 / 발표자료 PDF: [docs/최종발표자료임.pdf](docs/최종발표자료임.pdf)
-- 팀 협업일지(Daily Log): [Notion 링크](https://app.notion.com/p/73e3cd573ab04a9ca92d7ee967791205)
+- 팀 협업일지(Daily Log, 전체): [Notion 링크](https://app.notion.com/p/73e3cd573ab04a9ca92d7ee967791205)
+- 개인 협업일지
+  - 김혜린: [Notion 링크](https://app.notion.com/p/3d8ec9abc7d6815aa7b6c9efae600a1c)
+  - 강인호: [Notion 링크](https://app.notion.com/p/3d8ec9abc7d681919933fd2d44822175)
+  - 유영관: [Notion 링크](https://app.notion.com/p/3d8ec9abc7d6811ab93fca2c40aedade)
 
 ---
 
