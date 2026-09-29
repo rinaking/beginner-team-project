@@ -1,6 +1,33 @@
 # Health Eat — 경구약제 이미지 객체 탐지
 
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+![PyTorch](https://img.shields.io/badge/PyTorch-torchvision-orange.svg)
+![Kaggle](https://img.shields.io/badge/Kaggle-Private%20Competition-20BEFF.svg)
+
 사용자가 촬영한 알약 사진 한 장에서 최대 4개 약제의 종류(class)와 위치(bounding box)를 함께 인식하는 Object Detection 프로젝트입니다. 코드잇 AI 엔지니어링 14기 2팀이 Kaggle Private Competition(`ai14-level-project`)에 참가하며 진행했습니다.
+
+## 목차
+
+- [핵심 결과](#핵심-결과)
+- [프로젝트 개요](#프로젝트-개요)
+- [폴더 구조](#폴더-구조)
+- [실행 방법](#실행-방법)
+- [모델 실험 결과](#모델-실험-결과)
+- [협업 내용](#협업-내용)
+- [제출물](#제출물)
+- [라이선스](#라이선스)
+
+---
+
+## 핵심 결과
+
+> **최종 Public Score 0.35127** (RetinaNet ResNet50-FPN v2, Kaggle Private Leaderboard)
+
+- 원본 데이터 232장 → AI-Hub 외부 데이터 통합으로 **8,068장**까지 확장, 통제 실험으로 "데이터 양보다 클래스 다양성이 3배 이상 기여"함을 정량 검증
+- 로컬 mAP와 Kaggle Public Score 사이의 이상한 격차를 추적해 **제출 파이프라인의 top-4 강제 출력 버그**를 발견·수정
+- 로컬 mAP 0.986을 기록한 모델이 있었지만, validation split 코드를 직접 열어 **근접 중복 유출(data leakage) 위험**을 확인하고 최종 지표로 채택하지 않음
+- 자세한 과정은 [모델 실험 결과](#모델-실험-결과)와 [`docs/최종발표자료임.pdf`](docs/최종발표자료임.pdf) 참고
 
 ---
 
