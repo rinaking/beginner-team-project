@@ -10,10 +10,10 @@
 
 | | |
 | --- | --- |
-| **최종 모델** | RetinaNet ResNet50-FPN v2 |
-| **최종 Public Score** | 0.35127 |
+| **최종 모델** | YOLO26s |
+| **Kaggle 리더보드 최고 Public Score** | 0.35127 (RetinaNet ResNet50-FPN v2 제출 기준) |
 | **평가 지표** | mAP@[0.75:0.95] |
-| **데이터 규모** | 232장 → 8,068장 (AI-Hub 확장, 56클래스 기준) |
+| **데이터 규모** | 232장 → 10,732장 (AI-Hub 확장) |
 | **팀** | 코드잇 AI 엔지니어링 14기 2팀 (4인 → 3인) |
 
 ## 목차
@@ -31,13 +31,13 @@
 
 ## 핵심 결과
 
-> **최종 Public Score 0.35127** (RetinaNet ResNet50-FPN v2, Kaggle Private Leaderboard)
+> **최종 모델 YOLO26s** — Local mAP 0.986~0.988 (validation 한계로 일반화 성능으로는 해석하지 않음), NMS-Free End-to-End 구조·학습 안정성·배포 용이성을 근거로 최종 채택. Kaggle 리더보드 최고 Public Score는 0.35127(RetinaNet ResNet50-FPN v2 제출 기준).
 
 | 발견 | 내용 |
 | --- | --- |
-| 데이터 확장 | 원본 232장 → AI-Hub 통합으로 8,068장까지 확장. 통제 실험으로 "데이터 양보다 클래스 다양성이 3배 이상 기여"함을 정량 검증 |
+| 데이터 확장 | 원본 232장 → AI-Hub 통합으로 10,732장까지 확장. 통제 실험으로 "데이터 양보다 클래스 다양성이 3배 이상 기여"함을 정량 검증 |
 | 파이프라인 버그 | 로컬 mAP와 Kaggle Public Score 사이의 이상한 격차를 추적해 제출 파이프라인의 top-4 강제 출력 버그를 발견·수정 |
-| 검증되지 않은 고득점 배제 | 로컬 mAP 0.986을 기록한 모델이 있었지만, validation split 코드를 직접 열어 근접 중복 유출(data leakage) 위험을 확인하고 최종 지표로 채택하지 않음 |
+| YOLO26 최종 채택 | mAP 수치만이 아니라 작은 알약 탐지(STAL + Multi-scale)·후처리 단순화(NMS-Free End-to-End)·서비스 연동(ProgLoss·MuSGD·DFL-free)까지 함께 고려해 최종 모델로 선택. Local mAP 0.986~0.988은 validation 한계로 일반화 성능으로는 해석하지 않음 |
 
 자세한 과정은 [모델 실험 결과](#모델-실험-결과)와 [`docs/최종발표자료임.pdf`](docs/최종발표자료임.pdf)를 참고하세요.
 
@@ -48,10 +48,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 목표 | 알약 이미지 1장당 최대 4개 객체의 class + bounding box 검출 |
-| 데이터셋 | 대회 제공 232장(56클래스) + AI-Hub 외부 데이터로 확장한 8,068장(56클래스 기준) |
+| 데이터셋 | 대회 제공 232장(56클래스) + AI-Hub 외부 데이터로 확장한 10,732장 |
 | 평가 지표 | mAP@[0.75:0.95] (Kaggle Private Leaderboard) |
-| 주요 모델 | SSD300+VGG16(baseline), RetinaNet ResNet50-FPN v2(최종 채택), Faster R-CNN ResNet50-FPN v2, RTMDet-l, YOLO 계열 |
-| 팀 구성 | 김혜린(PM · RetinaNet), 강인호(Data), 유영관(Model), 최순우(중도 하차), 멘토 문상준 |
+| 주요 모델 | SSD300+VGG16(baseline), RetinaNet ResNet50-FPN v2(Kaggle 리더보드 최고 Public Score), Faster R-CNN ResNet50-FPN v2, RTMDet-l, **YOLO26s(최종 채택)** |
+| 팀 구성 | 김혜린(PM · RetinaNet), 강인호(Data · 서비스 앱), 유영관(Model · YOLO26s), 최순우(중도 하차), 멘토 문상준 |
 
 ---
 
@@ -59,12 +59,15 @@
 
 ```
 beginner-team-project/
-├── RetinaNet_ResNet50_FPN_v2_final.ipynb   최종 채택 모델
-├── 최초 모델링.ipynb                        SSD300+VGG16 baseline
-├── bbox_tightening.py                      bbox 품질 검증·보정 도구
-├── docs/                                   보고서 · 가이드 · 발표자료
-├── models/ utils/ main.py                  초기 Git 협업 실습용 스캐폴드 (본 프로젝트 코드 아님)
-└── .github/ISSUE_TEMPLATE/                 문서 · 버그 · 실험 이슈 템플릿
+├── YOLO26_AIHub_Pill_Detection_RTX5060.ipynb         최종 채택 모델 (YOLO26s)
+├── RetinaNet_ResNet50_FPN_v2_final.ipynb             Kaggle 리더보드 최고 Public Score 제출 모델
+├── RFDETR_XLarge_AIHub_Pill_Detection_RTX5060.ipynb  추가 실험 모델
+├── 최초 모델링.ipynb                                  SSD300+VGG16 baseline
+├── application/                                      실제 서비스 데모 (FastAPI 백엔드 + Flutter 모바일 앱)
+├── bbox_tightening.py                                bbox 품질 검증·보정 도구
+├── docs/                                             보고서 · 가이드 · 발표자료
+├── models/ utils/ main.py                            초기 Git 협업 실습용 스캐폴드 (본 프로젝트 코드 아님)
+└── .github/ISSUE_TEMPLATE/                           문서 · 버그 · 실험 이슈 템플릿
 ```
 
 `docs/` 폴더 구성:
@@ -83,7 +86,7 @@ beginner-team-project/
 
 ## 실행 방법
 
-핵심 모델은 노트북(`RetinaNet_ResNet50_FPN_v2_final.ipynb`)으로 학습·평가합니다.
+최종 채택 모델은 노트북(`YOLO26_AIHub_Pill_Detection_RTX5060.ipynb`)으로 학습·평가합니다. Kaggle 리더보드 제출에 사용된 모델은 `RetinaNet_ResNet50_FPN_v2_final.ipynb`를 참고하세요.
 
 ```bash
 # 1. 저장소 복제
@@ -93,7 +96,7 @@ cd beginner-team-project
 # 2. 패키지 설치 (가상환경 권장)
 pip install -r requirements.txt
 
-# 3. RetinaNet_ResNet50_FPN_v2_final.ipynb 실행
+# 3. YOLO26_AIHub_Pill_Detection_RTX5060.ipynb 실행
 #    (대회 데이터 + AI-Hub 확장 데이터 경로 설정 후 셀 순서대로 실행)
 ```
 
@@ -101,16 +104,27 @@ pip install -r requirements.txt
 
 ## 모델 실험 결과
 
-| 모델 | 데이터 기준 | Local mAP@[0.75:0.95] | Kaggle Public Score | 비고 |
-| --- | --- | --- | --- | --- |
-| SSD300 + VGG16 | 232장 | 0.4150 | 0.08645 ~ 0.12368 | baseline, top-4 강제 출력 버그 있었음 |
-| **RetinaNet ResNet50-FPN v2** | 232장 | — | **0.35127** | **최종 채택, 현재 최고점** |
-| Faster R-CNN ResNet50-FPN v2 | 232장 | — | 0.30818 | |
-| Faster R-CNN ResNet50-FPN v2 | 3,730장 / 118클래스 (통제실험 Case 2) | — | 0.48821 | 데이터 확장 효과 검증 |
-| RTMDet-l | 8,068장 후보군 | 0.506 | — | |
-| YOLO26S | 118클래스 전체 | 0.986 | — | validation split이 이미지 단위라 near-duplicate leakage 가능성 있어 최종 성능 지표로 미채택 |
+| 모델 | 백본(Backbone) | 주요 결과 (mAP@0.75:0.95) | 비고 |
+| --- | --- | --- | --- |
+| SSD300 | VGG16 | 0.5637 (local) | Baseline |
+| RetinaNet | ResNet50-FPN | 0.35127 (public) | 분류형/멀티스케일 |
+| Faster R-CNN | ResNet50-FPN v2 | 0.7986 (local) | 2-stage 비교 |
+| RTMDet-l | RTMDet | 0.506 (local) | 다른 one-stage |
+| **YOLO26s** | YOLO26 | **0.986~0.988 (local)** | Validation 한계로 일반화 성능으로 해석 X |
 
-8,068장 확장 데이터 기준 RetinaNet·YOLO 재학습은 GPU 자원 제약으로 마감 전 완료하지 못했으며, 검증되지 않은 수치 대신 위 표의 검증된 결과를 최종으로 보고합니다.
+> 다양한 모델을 비교하고, 데이터 특성에 맞는 최적의 모델을 선택했습니다. 공개/로컬 점수를 모두 고려하여 신뢰할 수 있는 성능을 분석했고, 단순한 수치가 아닌 실제 서비스 환경을 고려한 성능을 평가하여 **최종적으로 YOLO26s를 프로젝트의 핵심 모델로 선택**했습니다.
+
+### 왜 YOLO26을 최종 모델로 선택했는가
+
+프로젝트에서 실제로 관찰한 탐지 문제를 모델 설계 요소에 연결해 최종 모델을 정했습니다.
+
+| 관찰 | 설계(Design) | 내용 |
+| --- | --- | --- |
+| Small / Multi-scale Objects | STAL + Multi-scale | 작은 알약에 학습 신호를 더 주는 라벨 할당(STAL)과 다중 스케일 특징 활용 |
+| Post-processing Simplicity | NMS-Free End-to-End | NMS 없이 최종 결과를 바로 출력해 후처리 단계를 단순화 |
+| Training Stability / Deployment | ProgLoss · MuSGD · DFL-free | 안정적인 학습과 가벼운 헤드로 서비스 배포 · 연동에 유리 |
+
+> YOLO26은 mAP 수치만이 아니라, 작은 알약 탐지 · 후처리 단순화 · 서비스 연동까지 함께 고려해 선택했습니다. SSD300 · RetinaNet · Faster R-CNN · RTMDet과 비교한 실험 결과를 바탕으로 최종 모델로 선정했습니다.
 
 ---
 
@@ -121,8 +135,8 @@ pip install -r requirements.txt
 | 팀원 | 역할 | 담당 |
 | --- | --- | --- |
 | 김혜린 | 팀장 · PM | 일정 관리, RetinaNet 모델, 데이터·모델 검증, 보고서 작성 |
-| 강인호 | Data Engineer | EDA, 데이터 전처리 · 라벨링, 통제 실험 설계 |
-| 유영관 | Model Architect | AI-Hub 데이터 확장 파이프라인, RTMDet 모델 개발 |
+| 강인호 | Data Engineer | EDA, 데이터 전처리 · 라벨링, 통제 실험 설계, 실제 서비스 앱(FastAPI 백엔드 + Flutter 모바일) 개발 |
+| 유영관 | Model Architect | AI-Hub 데이터 확장 파이프라인, RTMDet·YOLO26s(최종 채택) 모델 개발 |
 | 최순우 | (중도 하차) | 원래 실험 · 평가 · 제출 담당, 이후 위 3인이 공동 분담 |
 | 문상준 | 멘토 | — |
 
